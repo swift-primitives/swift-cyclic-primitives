@@ -10,10 +10,11 @@
 // ===----------------------------------------------------------------------===//
 
 import Index_Primitives
+import Ordinal_Primitives
 
 // MARK: - Typealias
 
-extension Tagged where RawValue == Affine.Discrete.Position, Tag: ~Copyable {
+extension Tagged where RawValue == Ordinal.Position, Tag: ~Copyable {
     /// `Index<Tag>.Static<N>` = `Tagged<Tag, Cyclic.Group<N>.Element>`
     ///
     /// A statically-bounded cyclic index where arithmetic wraps modulo N.
