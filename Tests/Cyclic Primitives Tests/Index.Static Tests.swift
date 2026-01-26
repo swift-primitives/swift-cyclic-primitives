@@ -237,6 +237,8 @@ extension IndexStaticTests.EdgeCase {
 
         // These should have the same raw value but different types
         #expect(a.rawValue.rawValue == b.rawValue.rawValue)
+        #expect(type(of: a) != type(of: b))
+        
         // Cannot compare a == b due to different types (compile-time safety)
     }
 
@@ -244,7 +246,7 @@ extension IndexStaticTests.EdgeCase {
     func rawValueAccess() throws {
         let index = try Index<Int>.Static<5>.init(3)
         let element: Cyclic.Group<5>.Element = index.rawValue
-        #expect(element.rawValue == 3)
+        #expect(element == 3)
     }
 
     @Test("StaticIndexError is Hashable")
