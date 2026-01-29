@@ -18,23 +18,28 @@ extension Cyclic.Group {
     ///
     /// ```swift
     /// for element in Cyclic.Group<5>() {
-    ///     print(element.rawValue)  // 0, 1, 2, 3, 4
+    ///     print(element.position)  // 0, 1, 2, 3, 4
     /// }
     /// ```
     public struct Iterator: IteratorProtocol, Sendable {
         @usableFromInline
-        internal var current: Int
+        var current: Ordinal
+
+        @usableFromInline
+        let bound: Cardinal
 
         @inlinable
-        internal init() {
-            self.current = 0
+        init() {
+            self.current = .zero
+            self.bound = Cardinal(UInt(order))
         }
 
         @inlinable
         public mutating func next() -> Element? {
-            guard current < order else { return nil }
-            defer { current += 1 }
-            return Element(__unchecked: (), current)
+            guard current < bound else { return nil }
+            let element = Element(__unchecked: current)
+            current = current + Cardinal.one
+            return element
         }
     }
 }

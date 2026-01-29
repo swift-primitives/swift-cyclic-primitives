@@ -25,13 +25,13 @@ extension Cyclic.Group {
     ///
     /// ## Invariant
     ///
-    /// `rawValue` is always in the range `[0, order)`. Requires `order > 0`.
+    /// `position` is always in the range `[0, order)`. Requires `order > 0`.
     ///
     /// ## Example
     ///
     /// ```swift
     /// // Ring buffer index arithmetic
-    /// var tail: Cyclic.Group<10>.Element = try! .init(9)
+    /// var tail: Cyclic.Group<10>.Element = try! .init(Ordinal(9))
     /// tail = tail + .one  // Wraps to 0
     ///
     /// // Backward navigation
@@ -39,65 +39,83 @@ extension Cyclic.Group {
     /// idx = idx - .one  // Wraps to 4
     /// ```
     public struct Element: Hashable, Comparable, Sendable {
-        /// The underlying value (0 to order-1).
-        public let rawValue: Int
+        /// The position within the cyclic group [0, order).
+        public let position: Ordinal
 
-        /// Creates a cyclic group element from an integer.
-        ///
-        /// - Parameter rawValue: The value.
-        /// - Throws: `Error.invalidOrder` if `order <= 0`.
-        /// - Throws: `Error.outOfBounds` if `rawValue < 0` or `rawValue >= order`.
+        /// The group order as a Cardinal for arithmetic operations.
         @inlinable
-        public init(_ rawValue: Int) throws(Error) {
+        public static var orderCardinal: Cardinal { Cardinal(UInt(order)) }
+
+        /// Creates a cyclic group element from an ordinal position.
+        ///
+        /// - Parameter position: The ordinal position.
+        /// - Throws: `Error.invalidOrder` if `order <= 0`.
+        /// - Throws: `Error.outOfBounds` if `position >= order`.
+        @inlinable
+        public init(_ position: Ordinal) throws(Error) {
             guard order > 0 else { throw .invalidOrder }
-            guard rawValue >= 0, rawValue < order else { throw .outOfBounds(rawValue) }
-            self.rawValue = rawValue
+            guard position < Self.orderCardinal else {
+                throw .outOfBounds(Int(position.rawValue))
+            }
+            self.position = position
         }
 
         /// Creates a cyclic group element without bounds checking.
         ///
-        /// - Parameter rawValue: Must be in `0..<order` where `order > 0`.
+        /// - Parameter position: Must be in `0..<order` where `order > 0`.
         /// - Warning: No validation is performed. Use only when the value
         ///   is known to be in bounds and order is valid.
         @inlinable
-        public init(__unchecked: Void, _ rawValue: Int) {
-            self.rawValue = rawValue
+        public init(__unchecked position: Ordinal) {
+            self.position = position
+        }
+
+        /// Creates a cyclic group element from an ordinal position using modular reduction.
+        ///
+        /// Unlike `init(_:)`, this never fails — positions >= order are reduced modulo order.
+        ///
+        /// - Parameter position: The ordinal position.
+        /// - Precondition: order > 0
+        @inlinable
+        public init(wrapping position: Ordinal) {
+            precondition(order > 0, "Cyclic group order must be positive")
+            self.position = position % Self.orderCardinal
         }
 
         // MARK: - Equatable
 
         @inlinable
         public static func == (lhs: Self, rhs: Self) -> Bool {
-            lhs.rawValue == rhs.rawValue
+            lhs.position == rhs.position
         }
 
         // MARK: - Comparable
 
         @inlinable
         public static func < (lhs: Self, rhs: Self) -> Bool {
-            lhs.rawValue < rhs.rawValue
+            lhs.position < rhs.position
         }
 
         @inlinable
         public static func <= (lhs: Self, rhs: Self) -> Bool {
-            lhs.rawValue <= rhs.rawValue
+            lhs.position <= rhs.position
         }
 
         @inlinable
         public static func > (lhs: Self, rhs: Self) -> Bool {
-            lhs.rawValue > rhs.rawValue
+            lhs.position > rhs.position
         }
 
         @inlinable
         public static func >= (lhs: Self, rhs: Self) -> Bool {
-            lhs.rawValue >= rhs.rawValue
+            lhs.position >= rhs.position
         }
 
         // MARK: - Hashable
 
         @inlinable
         public func hash(into hasher: inout Hasher) {
-            hasher.combine(rawValue)
+            hasher.combine(position)
         }
     }
 }
@@ -118,6 +136,6 @@ extension Cyclic.Group.Element {
 
 extension Cyclic.Group.Element: CustomStringConvertible {
     public var description: String {
-        "Cyclic.Group<\(order)>.Element(\(rawValue))"
+        "Cyclic.Group<\(order)>.Element(\(position))"
     }
 }

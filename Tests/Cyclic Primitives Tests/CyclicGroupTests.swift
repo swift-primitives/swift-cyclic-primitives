@@ -20,34 +20,28 @@ struct CyclicGroupElementTests {
 
     @Test("Valid construction via throwing init")
     func validConstruction() throws {
-        // Use throwing init explicitly (not integer literal)
-        let value0: Int = 0
-        let g0 = try Cyclic.Group<5>.Element(value0)
-        #expect(g0.rawValue == 0)
+        // Use throwing init explicitly with Ordinal
+        let g0 = try Cyclic.Group<5>.Element(Ordinal(0))
+        #expect(g0.position == 0)
 
-        let value4: Int = 4
-        let g4 = try Cyclic.Group<5>.Element(value4)
-        #expect(g4.rawValue == 4)
+        let g4 = try Cyclic.Group<5>.Element(Ordinal(4))
+        #expect(g4.position == 4)
     }
 
     @Test("Out of bounds construction throws")
     func outOfBoundsThrows() {
-        // Use variables to force throwing init
-        let oob5: Int = 5
-        let oobNeg: Int = -1
         #expect(throws: Cyclic.Group<5>.Element.Error.outOfBounds(5)) {
-            _ = try Cyclic.Group<5>.Element(oob5)
+            _ = try Cyclic.Group<5>.Element(Ordinal(5))
         }
-        #expect(throws: Cyclic.Group<5>.Element.Error.outOfBounds(-1)) {
-            _ = try Cyclic.Group<5>.Element(oobNeg)
+        #expect(throws: Cyclic.Group<5>.Element.Error.outOfBounds(100)) {
+            _ = try Cyclic.Group<5>.Element(Ordinal(100))
         }
     }
 
     @Test("Invalid order throws")
     func invalidOrderThrows() {
-        let value: Int = 0
         #expect(throws: Cyclic.Group<0>.Element.Error.invalidOrder) {
-            _ = try Cyclic.Group<0>.Element(value)
+            _ = try Cyclic.Group<0>.Element(Ordinal(0))
         }
     }
 
@@ -56,13 +50,13 @@ struct CyclicGroupElementTests {
     @Test("Zero is identity")
     func zeroIdentity() {
         let zero = Cyclic.Group<5>.Element.zero
-        #expect(zero.rawValue == 0)
+        #expect(zero.position == 0)
     }
 
     @Test("One is generator")
     func oneGenerator() {
         let one = Cyclic.Group<5>.Element.one
-        #expect(one.rawValue == 1)
+        #expect(one.position == 1)
     }
 
     @Test("One equals zero for order 1")
@@ -70,7 +64,7 @@ struct CyclicGroupElementTests {
         let one = Cyclic.Group<1>.Element.one
         let zero = Cyclic.Group<1>.Element.zero
         #expect(one == zero)
-        #expect(one.rawValue == 0)
+        #expect(one.position == 0)
     }
 
     // MARK: - Group Operation (Addition)
@@ -80,7 +74,7 @@ struct CyclicGroupElementTests {
         let a: Cyclic.Group<10>.Element = 3
         let b: Cyclic.Group<10>.Element = 4
         let sum = a + b
-        #expect(sum.rawValue == 7)
+        #expect(sum.position == 7)
     }
 
     @Test("Addition with wrap")
@@ -88,7 +82,7 @@ struct CyclicGroupElementTests {
         let a: Cyclic.Group<5>.Element = 4
         let b: Cyclic.Group<5>.Element = 3
         let sum = a + b
-        #expect(sum.rawValue == 2)  // (4 + 3) mod 5 = 2
+        #expect(sum.position == 2)  // (4 + 3) mod 5 = 2
     }
 
     @Test("Identity property: a + zero = a")
@@ -105,7 +99,7 @@ struct CyclicGroupElementTests {
         let a: Cyclic.Group<10>.Element = 7
         let b: Cyclic.Group<10>.Element = 3
         let diff = a - b
-        #expect(diff.rawValue == 4)
+        #expect(diff.position == 4)
     }
 
     @Test("Subtraction with wrap")
@@ -113,7 +107,7 @@ struct CyclicGroupElementTests {
         let a: Cyclic.Group<5>.Element = 1
         let b: Cyclic.Group<5>.Element = 3
         let diff = a - b
-        #expect(diff.rawValue == 3)  // (1 - 3 + 5) mod 5 = 3
+        #expect(diff.position == 3)  // (1 - 3 + 5) mod 5 = 3
     }
 
     @Test("Subtraction wrap from zero")
@@ -121,7 +115,7 @@ struct CyclicGroupElementTests {
         let a: Cyclic.Group<5>.Element = 0
         let b: Cyclic.Group<5>.Element = 1
         let diff = a - b
-        #expect(diff.rawValue == 4)  // 0 - 1 wraps to 4
+        #expect(diff.position == 4)  // 0 - 1 wraps to 4
     }
 
     // MARK: - Additive Inverse
@@ -146,18 +140,18 @@ struct CyclicGroupElementTests {
     func compoundAddition() {
         var g: Cyclic.Group<5>.Element = 3
         g += .one
-        #expect(g.rawValue == 4)
+        #expect(g.position == 4)
         g += .one
-        #expect(g.rawValue == 0)  // wraps
+        #expect(g.position == 0)  // wraps
     }
 
     @Test("Compound subtraction")
     func compoundSubtraction() {
         var g: Cyclic.Group<5>.Element = 1
         g -= .one
-        #expect(g.rawValue == 0)
+        #expect(g.position == 0)
         g -= .one
-        #expect(g.rawValue == 4)  // wraps
+        #expect(g.position == 4)  // wraps
     }
 
     // MARK: - Ring Buffer Use Case
@@ -167,16 +161,16 @@ struct CyclicGroupElementTests {
         var tail = Cyclic.Group<4>.Element.zero
 
         tail = tail + .one  // 1
-        #expect(tail.rawValue == 1)
+        #expect(tail.position == 1)
 
         tail = tail + .one  // 2
-        #expect(tail.rawValue == 2)
+        #expect(tail.position == 2)
 
         tail = tail + .one  // 3
-        #expect(tail.rawValue == 3)
+        #expect(tail.position == 3)
 
         tail = tail + .one  // 0 (wraps)
-        #expect(tail.rawValue == 0)
+        #expect(tail.position == 0)
     }
 
     // MARK: - Comparable

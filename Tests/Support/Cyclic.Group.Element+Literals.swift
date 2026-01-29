@@ -20,7 +20,7 @@ public import Cyclic_Primitives
 extension Cyclic.Group.Element: ExpressibleByIntegerLiteral {
     public init(integerLiteral value: Int) {
         do {
-            self = try Self(value)
+            self = try Self(Ordinal(UInt(value)))
         } catch {
             preconditionFailure("Literal \(value) invalid for Cyclic.Group<\(order)>.Element")
         }

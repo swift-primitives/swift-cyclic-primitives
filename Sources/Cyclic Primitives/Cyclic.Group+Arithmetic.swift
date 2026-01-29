@@ -16,7 +16,7 @@ extension Cyclic.Group.Element {
     ///
     /// For any element `a`: `a + .zero == a`
     @inlinable
-    public static var zero: Self { Self(__unchecked: (), 0) }
+    public static var zero: Self { Self(__unchecked: .zero) }
 
     /// The generator (1 mod order) in ℤ/nℤ.
     ///
@@ -32,7 +32,9 @@ extension Cyclic.Group.Element {
     /// x = x + .one  // 0 (wraps)
     /// ```
     @inlinable
-    public static var one: Self { Self(__unchecked: (), 1 % order) }
+    public static var one: Self {
+        Self(__unchecked: order > 1 ? Ordinal(1) : .zero)
+    }
 }
 
 // MARK: - Group Operations
@@ -42,26 +44,37 @@ extension Cyclic.Group.Element {
     ///
     /// The result automatically wraps within `[0, order)`:
     /// ```swift
-    /// let a: Cyclic.Group<5>.Element = try! .init(4)
-    /// let b: Cyclic.Group<5>.Element = try! .init(3)
+    /// let a: Cyclic.Group<5>.Element = try! .init(Ordinal(4))
+    /// let b: Cyclic.Group<5>.Element = try! .init(Ordinal(3))
     /// let sum = a + b  // 2 (wraps: (4 + 3) mod 5 = 2)
     /// ```
+    ///
+    /// Composition: `Ordinal + Cardinal` then `% Cardinal`
     @inlinable
     public static func + (lhs: Self, rhs: Self) -> Self {
-        Self(__unchecked: (), (lhs.rawValue + rhs.rawValue) % order)
+        let sum = lhs.position + Cardinal(rhs.position)
+        let reduced = sum % Self.orderCardinal
+        return Self(__unchecked: reduced)
     }
 
     /// Inverse operation in ℤ/nℤ.
     ///
     /// The result automatically wraps within `[0, order)`:
     /// ```swift
-    /// let a: Cyclic.Group<5>.Element = try! .init(1)
-    /// let b: Cyclic.Group<5>.Element = try! .init(3)
+    /// let a: Cyclic.Group<5>.Element = try! .init(Ordinal(1))
+    /// let b: Cyclic.Group<5>.Element = try! .init(Ordinal(3))
     /// let diff = a - b  // 3 (wraps: (1 - 3 + 5) mod 5 = 3)
     /// ```
+    ///
+    /// Composition: `a - b (mod N)` = `(a + (N - b)) mod N`
+    /// Uses: `Cardinal - Cardinal` via `.subtract.exact` (safe because b < N invariant)
     @inlinable
     public static func - (lhs: Self, rhs: Self) -> Self {
-        Self(__unchecked: (), ((lhs.rawValue - rhs.rawValue) % order + order) % order)
+        // N - b is always valid since rhs.position < orderCardinal (invariant)
+        let inverse = Self.orderCardinal.subtract.saturating(Cardinal(rhs.position))
+        let sum = lhs.position + inverse
+        let reduced = sum % Self.orderCardinal
+        return Self(__unchecked: reduced)
     }
 
     /// Compound addition.
@@ -85,14 +98,16 @@ extension Cyclic.Group.Element {
     /// For element `a`, the inverse `-a` satisfies: `a + (-a) == .zero`
     ///
     /// ```swift
-    /// let a: Cyclic.Group<5>.Element = try! .init(3)
+    /// let a: Cyclic.Group<5>.Element = try! .init(Ordinal(3))
     /// let inv = a.inverse  // 2 (because 3 + 2 = 5 ≡ 0 mod 5)
     /// ```
+    ///
+    /// Composition: `N - a` via Cardinal subtraction, converted back to Ordinal
     @inlinable
     public var inverse: Self {
-        if rawValue == 0 {
-            return self
-        }
-        return Self(__unchecked: (), order - rawValue)
+        if position == .zero { return self }
+        // position < orderCardinal (invariant), so subtraction is safe
+        let inv = Self.orderCardinal.subtract.saturating(Cardinal(position))
+        return Self(__unchecked: Ordinal(inv))
     }
 }
