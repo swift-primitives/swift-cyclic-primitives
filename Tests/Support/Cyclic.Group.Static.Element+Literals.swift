@@ -11,18 +11,18 @@
 
 public import Cyclic_Primitives
 
-/// Test support: Adds `ExpressibleByIntegerLiteral` conformance to `Cyclic.Group.Element`.
+/// Test support: Adds `ExpressibleByIntegerLiteral` conformance to `Cyclic.Group.Static.Element`.
 ///
 /// This conformance is available only for test targets. Production code should use
 /// the throwing initializer `init(_:)` to construct elements.
 ///
 /// - Warning: Traps on invalid values. Use only in tests.
-extension Cyclic.Group.Element: ExpressibleByIntegerLiteral {
+extension Cyclic.Group.Static.Element: ExpressibleByIntegerLiteral {
     public init(integerLiteral value: Int) {
         do {
             self = try Self(Ordinal(UInt(value)))
         } catch {
-            preconditionFailure("Literal \(value) invalid for Cyclic.Group<\(order)>.Element")
+            preconditionFailure("Literal \(value) invalid for Cyclic.Group.Static<\(modulus)>.Element")
         }
     }
 }

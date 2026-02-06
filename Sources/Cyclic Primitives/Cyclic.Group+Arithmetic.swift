@@ -9,105 +9,121 @@
 //
 // ===----------------------------------------------------------------------===//
 
-// MARK: - Identity and Generator
+// MARK: - Dynamic Cyclic Group Operations
 
-extension Cyclic.Group.Element {
-    /// The identity element (0) in ℤ/nℤ.
+extension Cyclic.Group {
+    /// Advances an element by one position, wrapping at modulus.
     ///
-    /// For any element `a`: `a + .zero == a`
-    @inlinable
-    public static var zero: Self { Self(__unchecked: .zero) }
-
-    /// The generator (1 mod order) in ℤ/nℤ.
+    /// - Parameters:
+    ///   - element: The current element.
+    ///   - modulus: The group modulus.
+    /// - Returns: The successor element.
+    /// - Complexity: O(1)
     ///
-    /// For order > 1, this is 1. For order == 1, this equals `.zero`.
-    ///
-    /// Repeatedly adding `.one` generates all elements of the group:
-    /// ```swift
-    /// var x: Cyclic.Group<5>.Element = .zero
-    /// x = x + .one  // 1
-    /// x = x + .one  // 2
-    /// x = x + .one  // 3
-    /// x = x + .one  // 4
-    /// x = x + .one  // 0 (wraps)
-    /// ```
-    @inlinable
-    public static var one: Self {
-        Self(__unchecked: order > 1 ? Ordinal(1) : .zero)
-    }
-}
-
-// MARK: - Group Operations
-
-extension Cyclic.Group.Element {
-    /// Group operation in ℤ/nℤ.
-    ///
-    /// The result automatically wraps within `[0, order)`:
-    /// ```swift
-    /// let a: Cyclic.Group<5>.Element = try! .init(Ordinal(4))
-    /// let b: Cyclic.Group<5>.Element = try! .init(Ordinal(3))
-    /// let sum = a + b  // 2 (wraps: (4 + 3) mod 5 = 2)
-    /// ```
-    ///
-    /// Composition: `Ordinal + Cardinal` then `% Cardinal`
-    @inlinable
-    public static func + (lhs: Self, rhs: Self) -> Self {
-        let sum = lhs.position + Cardinal(rhs.position)
-        let reduced = sum % Self.orderCardinal
-        return Self(__unchecked: reduced)
-    }
-
-    /// Inverse operation in ℤ/nℤ.
-    ///
-    /// The result automatically wraps within `[0, order)`:
-    /// ```swift
-    /// let a: Cyclic.Group<5>.Element = try! .init(Ordinal(1))
-    /// let b: Cyclic.Group<5>.Element = try! .init(Ordinal(3))
-    /// let diff = a - b  // 3 (wraps: (1 - 3 + 5) mod 5 = 3)
-    /// ```
-    ///
-    /// Composition: `a - b (mod N)` = `(a + (N - b)) mod N`
-    /// Uses: `Cardinal - Cardinal` via `.subtract.exact` (safe because b < N invariant)
-    @inlinable
-    public static func - (lhs: Self, rhs: Self) -> Self {
-        // N - b is always valid since rhs.position < orderCardinal (invariant)
-        let inverse = Self.orderCardinal.subtract.saturating(Cardinal(rhs.position))
-        let sum = lhs.position + inverse
-        let reduced = sum % Self.orderCardinal
-        return Self(__unchecked: reduced)
-    }
-
-    /// Compound addition.
-    @inlinable
-    public static func += (lhs: inout Self, rhs: Self) {
-        lhs = lhs + rhs
-    }
-
-    /// Compound subtraction.
-    @inlinable
-    public static func -= (lhs: inout Self, rhs: Self) {
-        lhs = lhs - rhs
-    }
-}
-
-// MARK: - Additive Inverse
-
-extension Cyclic.Group.Element {
-    /// The additive inverse of this element.
-    ///
-    /// For element `a`, the inverse `-a` satisfies: `a + (-a) == .zero`
+    /// ## Example
     ///
     /// ```swift
-    /// let a: Cyclic.Group<5>.Element = try! .init(Ordinal(3))
-    /// let inv = a.inverse  // 2 (because 3 + 2 = 5 ≡ 0 mod 5)
+    /// let modulus = try Cyclic.Group.Modulus(Cardinal(5))
+    /// let element = Cyclic.Group.Element(__unchecked: Ordinal(4))
+    /// let next = Cyclic.Group.successor(element, modulus: modulus)  // 0 (wraps)
     /// ```
-    ///
-    /// Composition: `N - a` via Cardinal subtraction, converted back to Ordinal
     @inlinable
-    public var inverse: Self {
-        if position == .zero { return self }
-        // position < orderCardinal (invariant), so subtraction is safe
-        let inv = Self.orderCardinal.subtract.saturating(Cardinal(position))
-        return Self(__unchecked: Ordinal(inv))
+    public static func successor(_ element: Element, modulus: Modulus) -> Element {
+        let sum = element.residue + Cardinal.one
+        let reduced = sum % modulus.value
+        return Element(__unchecked: reduced)
+    }
+
+    /// Retreats an element by one position, wrapping at modulus.
+    ///
+    /// - Parameters:
+    ///   - element: The current element.
+    ///   - modulus: The group modulus.
+    /// - Returns: The predecessor element.
+    /// - Complexity: O(1)
+    ///
+    /// ## Example
+    ///
+    /// ```swift
+    /// let modulus = try Cyclic.Group.Modulus(Cardinal(5))
+    /// let element = Cyclic.Group.Element.zero
+    /// let prev = Cyclic.Group.predecessor(element, modulus: modulus)  // 4 (wraps)
+    /// ```
+    @inlinable
+    public static func predecessor(_ element: Element, modulus: Modulus) -> Element {
+        // (element - 1 + modulus) % modulus
+        let sum = element.residue + modulus.value.subtract.saturating(Cardinal.one)
+        let reduced = sum % modulus.value
+        return Element(__unchecked: reduced)
+    }
+
+    /// Adds two elements in the cyclic group.
+    ///
+    /// - Parameters:
+    ///   - lhs: First element.
+    ///   - rhs: Second element.
+    ///   - modulus: The group modulus.
+    /// - Returns: The sum modulo the modulus.
+    /// - Complexity: O(1)
+    @inlinable
+    public static func add(_ lhs: Element, _ rhs: Element, modulus: Modulus) -> Element {
+        let sum = lhs.residue + Cardinal(rhs.residue)
+        let reduced = sum % modulus.value
+        return Element(__unchecked: reduced)
+    }
+
+    /// Subtracts two elements in the cyclic group.
+    ///
+    /// - Parameters:
+    ///   - lhs: Element to subtract from.
+    ///   - rhs: Element to subtract.
+    ///   - modulus: The group modulus.
+    /// - Returns: The difference modulo the modulus.
+    /// - Complexity: O(1)
+    @inlinable
+    public static func subtract(_ lhs: Element, _ rhs: Element, modulus: Modulus) -> Element {
+        // (lhs - rhs + modulus) % modulus
+        let inverse = modulus.value.subtract.saturating(Cardinal(rhs.residue))
+        let sum = lhs.residue + inverse
+        let reduced = sum % modulus.value
+        return Element(__unchecked: reduced)
+    }
+
+    /// Computes the additive inverse of an element.
+    ///
+    /// - Parameters:
+    ///   - element: The element.
+    ///   - modulus: The group modulus.
+    /// - Returns: The inverse element such that `element + inverse = zero`.
+    /// - Complexity: O(1)
+    @inlinable
+    public static func inverse(_ element: Element, modulus: Modulus) -> Element {
+        if element.residue == .zero { return element }
+        let inv = modulus.value.subtract.saturating(Cardinal(element.residue))
+        return Element(__unchecked: Ordinal(inv))
+    }
+
+    /// Advances an element by an offset, wrapping at modulus.
+    ///
+    /// - Parameters:
+    ///   - element: The current element.
+    ///   - offset: The offset to advance by (can be negative).
+    ///   - modulus: The group modulus.
+    /// - Returns: The resulting element.
+    /// - Complexity: O(1)
+    @inlinable
+    public static func advanced<Tag: ~Copyable>(
+        _ element: Element,
+        by offset: Index<Tag>.Offset,
+        modulus: Modulus
+    ) -> Element {
+        let mod = Int(bitPattern: modulus.value)
+        let offsetValue = offset.vector.rawValue
+        // Normalize negative offsets
+        let normalizedOffset = ((offsetValue % mod) + mod) % mod
+        let normalizedCardinal = Cardinal(UInt(normalizedOffset))
+        let sum = element.residue + normalizedCardinal
+        let reduced = sum % modulus.value
+        return Element(__unchecked: reduced)
     }
 }

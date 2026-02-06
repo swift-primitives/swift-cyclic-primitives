@@ -9,15 +9,15 @@
 //
 // ===----------------------------------------------------------------------===//
 
-extension Cyclic.Group {
+extension Cyclic.Group.Static {
     /// An iterator over all elements of a cyclic group.
     ///
-    /// Produces elements in order from 0 to `order - 1`.
+    /// Produces elements in order from 0 to `modulus - 1`.
     ///
     /// ## Example
     ///
     /// ```swift
-    /// for element in Cyclic.Group<5>() {
+    /// for element in Cyclic.Group.Static<5>() {
     ///     print(element.position)  // 0, 1, 2, 3, 4
     /// }
     /// ```
@@ -31,7 +31,7 @@ extension Cyclic.Group {
         @inlinable
         init() {
             self.current = .zero
-            self.bound = Cardinal(UInt(order))
+            self.bound = Cardinal(UInt(modulus))
         }
 
         @inlinable
