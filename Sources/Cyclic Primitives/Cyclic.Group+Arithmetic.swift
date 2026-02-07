@@ -117,13 +117,15 @@ extension Cyclic.Group {
         by offset: Index<Tag>.Offset,
         modulus: Modulus
     ) -> Element {
-        let mod = Int(bitPattern: modulus.value)
-        let offsetValue = offset.vector.rawValue
-        // Normalize negative offsets
-        let normalizedOffset = ((offsetValue % mod) + mod) % mod
-        let normalizedCardinal = Cardinal(UInt(normalizedOffset))
-        let sum = element.residue + normalizedCardinal
-        let reduced = sum % modulus.value
-        return Element(__unchecked: reduced)
+        if offset.vector >= .zero {
+            let forward = Ordinal(UInt(offset.vector.rawValue)) % modulus.value
+            let sum = element.residue + Cardinal(forward)
+            return Element(__unchecked: sum % modulus.value)
+        } else {
+            let backward = Ordinal(offset.vector.rawValue.magnitude) % modulus.value
+            let inverse = modulus.value.subtract.saturating(Cardinal(backward))
+            let sum = element.residue + inverse
+            return Element(__unchecked: sum % modulus.value)
+        }
     }
 }
