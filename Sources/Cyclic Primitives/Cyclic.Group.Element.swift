@@ -62,6 +62,16 @@ extension Cyclic.Group {
             self.residue = residue
         }
 
+        /// Creates an element from a typed index without validation.
+        ///
+        /// - Parameter index: Must be in `[0, modulus)` for any modulus
+        ///   that will be used in operations.
+        /// - Warning: No validation is performed.
+        @inlinable
+        public init<Tag: ~Copyable>(__unchecked index: Index<Tag>) {
+            self.residue = index.ordinal
+        }
+
         /// Creates the zero element (identity).
         @inlinable
         public static var zero: Self { Self(__unchecked: .zero) }
