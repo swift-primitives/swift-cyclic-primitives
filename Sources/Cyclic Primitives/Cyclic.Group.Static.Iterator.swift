@@ -31,7 +31,7 @@ extension Cyclic.Group.Static {
         @inlinable
         init() {
             self.current = .zero
-            self.bound = Cardinal(UInt(modulus))
+            self.bound = try! Cardinal(modulus)
         }
 
         @inlinable

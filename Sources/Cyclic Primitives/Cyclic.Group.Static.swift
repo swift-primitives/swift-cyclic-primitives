@@ -81,7 +81,7 @@ extension Cyclic.Group.Static {
 
         /// The group modulus as a Cardinal for arithmetic operations.
         @inlinable
-        public static var modulusCardinal: Cardinal { Cardinal(UInt(modulus)) }
+        public static var modulusCardinal: Cardinal { try! Cardinal(modulus) }
 
         /// Creates a cyclic group element from an ordinal position.
         ///

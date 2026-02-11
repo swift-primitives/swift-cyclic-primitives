@@ -43,5 +43,5 @@ extension Cyclic.Group.Static {
     ///
     /// This is a compile-time constant derived from the generic parameter.
     @inlinable
-    public static var count: Cardinal { Cardinal(UInt(modulus)) }
+    public static var count: Cardinal { try! Cardinal(modulus) }
 }

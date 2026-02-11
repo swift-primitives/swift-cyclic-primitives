@@ -118,7 +118,7 @@ extension Cyclic.Group {
         modulus: Modulus
     ) -> Element {
         if offset.vector >= .zero {
-            let forward = Ordinal(UInt(offset.vector.rawValue)) % modulus.value
+            let forward = try! Ordinal(offset.vector) % modulus.value
             let sum = element.residue + Cardinal(forward)
             return Element(__unchecked: sum % modulus.value)
         } else {
