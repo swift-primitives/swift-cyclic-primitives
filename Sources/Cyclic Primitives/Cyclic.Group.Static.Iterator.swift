@@ -9,6 +9,8 @@
 //
 // ===----------------------------------------------------------------------===//
 
+import Sequence_Primitives
+
 extension Cyclic.Group.Static {
     /// An iterator over all elements of a cyclic group.
     ///
@@ -21,7 +23,7 @@ extension Cyclic.Group.Static {
     ///     print(element.position)  // 0, 1, 2, 3, 4
     /// }
     /// ```
-    public struct Iterator: IteratorProtocol, Sendable {
+    public struct Iterator: Sequence.Iterator.`Protocol`, IteratorProtocol, Sendable {
         @usableFromInline
         var current: Ordinal
 
