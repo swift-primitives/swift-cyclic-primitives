@@ -30,10 +30,14 @@ extension Cyclic.Group.Static {
         @usableFromInline
         let bound: Cardinal
 
+        @usableFromInline
+        var _buffer: InlineArray<1, Element>
+
         @inlinable
         init() {
             self.current = .zero
             self.bound = try! Cardinal(modulus)
+            self._buffer = InlineArray(repeating: Element(__unchecked: .zero))
         }
 
         @inlinable
@@ -42,6 +46,17 @@ extension Cyclic.Group.Static {
             let element = Element(__unchecked: current)
             current = current + Cardinal.one
             return element
+        }
+
+        @_lifetime(&self)
+        @inlinable
+        public mutating func nextSpan(maximumCount: Cardinal) -> Swift.Span<Element> {
+            guard maximumCount > .zero, current < bound else {
+                return _buffer.span.extracting(first: 0)
+            }
+            _buffer[0] = Element(__unchecked: current)
+            current = current + Cardinal.one
+            return _buffer.span
         }
     }
 }
