@@ -18,8 +18,8 @@ struct CyclicGroupStaticElementTests {
 
     // MARK: - Construction
 
-    @Test("Valid construction via throwing init")
-    func validConstruction() throws {
+    @Test
+    func `Valid construction via throwing init`() throws {
         // Use throwing init explicitly with Ordinal
         let g0 = try Cyclic.Group.Static<5>.Element(Ordinal(0))
         #expect(g0.position == 0)
@@ -28,8 +28,8 @@ struct CyclicGroupStaticElementTests {
         #expect(g4.position == 4)
     }
 
-    @Test("Out of bounds construction throws")
-    func outOfBoundsThrows() {
+    @Test
+    func `Out of bounds construction throws`() {
         #expect(throws: Cyclic.Group.Static<5>.Element.Error.outOfBounds(5)) {
             _ = try Cyclic.Group.Static<5>.Element(Ordinal(5))
         }
@@ -38,8 +38,8 @@ struct CyclicGroupStaticElementTests {
         }
     }
 
-    @Test("Invalid modulus throws")
-    func invalidModulusThrows() {
+    @Test
+    func `Invalid modulus throws`() {
         #expect(throws: Cyclic.Group.Static<0>.Element.Error.invalidModulus) {
             _ = try Cyclic.Group.Static<0>.Element(Ordinal(0))
         }
@@ -47,20 +47,20 @@ struct CyclicGroupStaticElementTests {
 
     // MARK: - Identity and Generator
 
-    @Test("Zero is identity")
-    func zeroIdentity() {
+    @Test
+    func `Zero is identity`() {
         let zero = Cyclic.Group.Static<5>.Element.zero
         #expect(zero.position == 0)
     }
 
-    @Test("One is generator")
-    func oneGenerator() {
+    @Test
+    func `One is generator`() {
         let one = Cyclic.Group.Static<5>.Element.one
         #expect(one.position == 1)
     }
 
-    @Test("One equals zero for modulus 1")
-    func oneEqualsZeroForModulusOne() {
+    @Test
+    func `One equals zero for modulus 1`() {
         let one = Cyclic.Group.Static<1>.Element.one
         let zero = Cyclic.Group.Static<1>.Element.zero
         #expect(one == zero)
@@ -69,24 +69,24 @@ struct CyclicGroupStaticElementTests {
 
     // MARK: - Group Operation (Addition)
 
-    @Test("Addition without wrap")
-    func additionNoWrap() {
+    @Test
+    func `Addition without wrap`() {
         let a: Cyclic.Group.Static<10>.Element = 3
         let b: Cyclic.Group.Static<10>.Element = 4
         let sum = a + b
         #expect(sum.position == 7)
     }
 
-    @Test("Addition with wrap")
-    func additionWithWrap() {
+    @Test
+    func `Addition with wrap`() {
         let a: Cyclic.Group.Static<5>.Element = 4
         let b: Cyclic.Group.Static<5>.Element = 3
         let sum = a + b
         #expect(sum.position == 2)  // (4 + 3) mod 5 = 2
     }
 
-    @Test("Identity property: a + zero = a")
-    func identityProperty() {
+    @Test
+    func `Identity property: a + zero = a`() {
         let a: Cyclic.Group.Static<7>.Element = 4
         let result = a + .zero
         #expect(result == a)
@@ -94,24 +94,24 @@ struct CyclicGroupStaticElementTests {
 
     // MARK: - Inverse Operation (Subtraction)
 
-    @Test("Subtraction without wrap")
-    func subtractionNoWrap() {
+    @Test
+    func `Subtraction without wrap`() {
         let a: Cyclic.Group.Static<10>.Element = 7
         let b: Cyclic.Group.Static<10>.Element = 3
         let diff = a - b
         #expect(diff.position == 4)
     }
 
-    @Test("Subtraction with wrap")
-    func subtractionWithWrap() {
+    @Test
+    func `Subtraction with wrap`() {
         let a: Cyclic.Group.Static<5>.Element = 1
         let b: Cyclic.Group.Static<5>.Element = 3
         let diff = a - b
         #expect(diff.position == 3)  // (1 - 3 + 5) mod 5 = 3
     }
 
-    @Test("Subtraction wrap from zero")
-    func subtractionFromZero() {
+    @Test
+    func `Subtraction wrap from zero`() {
         let a: Cyclic.Group.Static<5>.Element = 0
         let b: Cyclic.Group.Static<5>.Element = 1
         let diff = a - b
@@ -120,24 +120,24 @@ struct CyclicGroupStaticElementTests {
 
     // MARK: - Additive Inverse
 
-    @Test("Inverse property: a + inverse = zero")
-    func inverseProperty() {
+    @Test
+    func `Inverse property: a + inverse = zero`() {
         let a: Cyclic.Group.Static<7>.Element = 4
         let inv = a.inverse
         let result = a + inv
         #expect(result == .zero)
     }
 
-    @Test("Inverse of zero is zero")
-    func inverseOfZero() {
+    @Test
+    func `Inverse of zero is zero`() {
         let zero = Cyclic.Group.Static<5>.Element.zero
         #expect(zero.inverse == .zero)
     }
 
     // MARK: - Compound Operations
 
-    @Test("Compound addition")
-    func compoundAddition() {
+    @Test
+    func `Compound addition`() {
         var g: Cyclic.Group.Static<5>.Element = 3
         g += .one
         #expect(g.position == 4)
@@ -145,8 +145,8 @@ struct CyclicGroupStaticElementTests {
         #expect(g.position == 0)  // wraps
     }
 
-    @Test("Compound subtraction")
-    func compoundSubtraction() {
+    @Test
+    func `Compound subtraction`() {
         var g: Cyclic.Group.Static<5>.Element = 1
         g -= .one
         #expect(g.position == 0)
@@ -156,8 +156,8 @@ struct CyclicGroupStaticElementTests {
 
     // MARK: - Ring Buffer Use Case
 
-    @Test("Ring buffer index advancement")
-    func ringBufferAdvancement() {
+    @Test
+    func `Ring buffer index advancement`() {
         var tail = Cyclic.Group.Static<4>.Element.zero
 
         tail = tail + .one  // 1
@@ -175,8 +175,8 @@ struct CyclicGroupStaticElementTests {
 
     // MARK: - Comparable
 
-    @Test("Ordering")
-    func ordering() {
+    @Test
+    func `Ordering`() {
         let a: Cyclic.Group.Static<5>.Element = 2
         let b: Cyclic.Group.Static<5>.Element = 4
         #expect(a < b)
@@ -186,8 +186,8 @@ struct CyclicGroupStaticElementTests {
 
     // MARK: - Modulus
 
-    @Test("Modulus property")
-    func modulusProperty() {
+    @Test
+    func `Modulus property`() {
         #expect(Cyclic.Group.Static<7>.modulus == 7)
         #expect(Cyclic.Group.Static<1>.modulus == 1)
         #expect(Cyclic.Group.Static<100>.modulus == 100)
