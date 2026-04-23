@@ -9,7 +9,7 @@
 //
 // ===----------------------------------------------------------------------===//
 
-public import Identity_Primitives
+public import Tagged_Primitives
 
 //// MARK: - Tagged<Tag, Cyclic.Group.Static<N>.Element> Properties and Constants
 //
