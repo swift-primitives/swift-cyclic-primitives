@@ -92,7 +92,7 @@ extension Cyclic.Group.Static {
         public init(_ position: Ordinal) throws(Error) {
             guard modulus > 0 else { throw .invalidModulus }
             guard position < Self.modulusCardinal else {
-                throw .outOfBounds(Int(position.rawValue))
+                throw .outOfBounds(Int(position.underlying))
             }
             self.position = position
         }

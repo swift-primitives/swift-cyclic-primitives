@@ -54,7 +54,7 @@ extension Cyclic.Group {
         @inlinable
         public init<Tag: ~Copyable>(_ count: Index<Tag>.Count) throws(Error) {
             guard count > .zero else { throw .zeroModulus }
-            self.value = count.rawValue
+            self.value = count.underlying
         }
 
         /// Creates a modulus from a count without validation.
@@ -63,7 +63,7 @@ extension Cyclic.Group {
         /// - Warning: No validation is performed.
         @inlinable
         public init<Tag: ~Copyable>(__unchecked count: Index<Tag>.Count) {
-            self.value = count.rawValue
+            self.value = count.underlying
         }
     }
 }
