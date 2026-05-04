@@ -122,7 +122,7 @@ extension Cyclic.Group {
             let sum = element.residue + Cardinal(forward)
             return Element(__unchecked: sum % modulus.value)
         } else {
-            let backward = Ordinal(offset.vector.underlying.magnitude) % modulus.value
+            let backward = Ordinal(offset.vector.rawValue.magnitude) % modulus.value
             let inverse = modulus.value.subtract.saturating(Cardinal(backward))
             let sum = element.residue + inverse
             return Element(__unchecked: sum % modulus.value)
