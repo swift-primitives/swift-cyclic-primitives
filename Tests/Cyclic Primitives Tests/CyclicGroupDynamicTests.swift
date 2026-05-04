@@ -10,6 +10,7 @@
 // ===----------------------------------------------------------------------===//
 
 import Testing
+
 @testable import Cyclic_Primitives
 
 @Suite("Cyclic.Group (Dynamic) Tests")

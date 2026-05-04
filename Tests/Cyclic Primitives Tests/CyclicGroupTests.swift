@@ -9,9 +9,10 @@
 //
 // ===----------------------------------------------------------------------===//
 
-import Testing
-@testable import Cyclic_Primitives
 import Cyclic_Primitives_Test_Support
+import Testing
+
+@testable import Cyclic_Primitives
 
 @Suite("Cyclic.Group.Static.Element Tests")
 struct CyclicGroupStaticElementTests {
