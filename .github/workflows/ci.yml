@@ -27,11 +27,6 @@ jobs:
   docs:
     uses: swift-institute/.github/.github/workflows/swift-docs.yml@main
     with:
-      umbrella-module: Cyclic_Primitives
-      umbrella-display-name: "Cyclic Primitives"
-      umbrella-bundle-id: "swift-cyclic-primitives.Cyclic-Primitives"
-      umbrella-docc-path: "Sources/Cyclic Primitives/Cyclic Primitives.docc"
-      exclude-modules: "Cyclic_Primitives_Test_Support"
       enable-private-repos: true
     secrets:
       PRIVATE_REPO_TOKEN: ${{ secrets.PRIVATE_REPO_TOKEN }}
