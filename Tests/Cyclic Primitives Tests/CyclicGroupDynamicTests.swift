@@ -27,7 +27,7 @@ struct CyclicGroupDynamicTests {
     @Test
     func `Zero modulus throws`() {
         #expect(throws: Cyclic.Group.Modulus.Error.zeroModulus) {
-            _ = try Cyclic.Group.Modulus(Cardinal(0))
+            _ = try Cyclic.Group.Modulus(.zero)
         }
     }
 
