@@ -30,7 +30,7 @@ extension Cyclic.Group {
         /// - Parameter value: The modulus value (must be > 0).
         /// - Throws: `Error.zeroModulus` if value is zero.
         @inlinable
-        public init(_ value: Cardinal) throws(Error) {
+        public init(_ value: Cardinal) throws(Self.Error) {
             guard value > .zero else { throw .zeroModulus }
             self.value = value
         }
@@ -52,7 +52,7 @@ extension Cyclic.Group {
         /// - Parameter count: The count value (must be > 0).
         /// - Throws: `Error.zeroModulus` if count is zero.
         @inlinable
-        public init<Tag: ~Copyable>(_ count: Index<Tag>.Count) throws(Error) {
+        public init<Tag: ~Copyable>(_ count: Index<Tag>.Count) throws(Self.Error) {
             guard count > .zero else { throw .zeroModulus }
             self.value = count.underlying
         }
