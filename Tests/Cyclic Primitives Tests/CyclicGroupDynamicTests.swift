@@ -19,7 +19,7 @@ struct CyclicGroupDynamicTests {
     // MARK: - Modulus Construction
 
     @Test
-    func `Valid modulus construction`() throws {
+    func `Valid modulus construction`() throws(Cyclic.Group.Modulus.Error) {
         let modulus = try Cyclic.Group.Modulus(Cardinal(5))
         #expect(modulus.value == Cardinal(5))
     }
@@ -34,7 +34,7 @@ struct CyclicGroupDynamicTests {
     // MARK: - Element Construction
 
     @Test
-    func `Element construction with normalization`() throws {
+    func `Element construction with normalization`() throws(Cyclic.Group.Modulus.Error) {
         let modulus = try Cyclic.Group.Modulus(Cardinal(5))
 
         let e0 = Cyclic.Group.Element(Ordinal(0), modulus: modulus)
@@ -51,7 +51,7 @@ struct CyclicGroupDynamicTests {
     // MARK: - Successor
 
     @Test
-    func `Successor without wrap`() throws {
+    func `Successor without wrap`() throws(Cyclic.Group.Modulus.Error) {
         let modulus = try Cyclic.Group.Modulus(Cardinal(5))
         let element = Cyclic.Group.Element(__unchecked: Ordinal(2))
         let next = Cyclic.Group.successor(element, modulus: modulus)
@@ -59,7 +59,7 @@ struct CyclicGroupDynamicTests {
     }
 
     @Test
-    func `Successor with wrap`() throws {
+    func `Successor with wrap`() throws(Cyclic.Group.Modulus.Error) {
         let modulus = try Cyclic.Group.Modulus(Cardinal(5))
         let element = Cyclic.Group.Element(__unchecked: Ordinal(4))
         let next = Cyclic.Group.successor(element, modulus: modulus)
@@ -69,7 +69,7 @@ struct CyclicGroupDynamicTests {
     // MARK: - Predecessor
 
     @Test
-    func `Predecessor without wrap`() throws {
+    func `Predecessor without wrap`() throws(Cyclic.Group.Modulus.Error) {
         let modulus = try Cyclic.Group.Modulus(Cardinal(5))
         let element = Cyclic.Group.Element(__unchecked: Ordinal(3))
         let prev = Cyclic.Group.predecessor(element, modulus: modulus)
@@ -77,7 +77,7 @@ struct CyclicGroupDynamicTests {
     }
 
     @Test
-    func `Predecessor with wrap`() throws {
+    func `Predecessor with wrap`() throws(Cyclic.Group.Modulus.Error) {
         let modulus = try Cyclic.Group.Modulus(Cardinal(5))
         let element = Cyclic.Group.Element.zero
         let prev = Cyclic.Group.predecessor(element, modulus: modulus)
@@ -87,7 +87,7 @@ struct CyclicGroupDynamicTests {
     // MARK: - Add
 
     @Test
-    func `Add without wrap`() throws {
+    func `Add without wrap`() throws(Cyclic.Group.Modulus.Error) {
         let modulus = try Cyclic.Group.Modulus(Cardinal(10))
         let a = Cyclic.Group.Element(__unchecked: Ordinal(3))
         let b = Cyclic.Group.Element(__unchecked: Ordinal(4))
@@ -96,7 +96,7 @@ struct CyclicGroupDynamicTests {
     }
 
     @Test
-    func `Add with wrap`() throws {
+    func `Add with wrap`() throws(Cyclic.Group.Modulus.Error) {
         let modulus = try Cyclic.Group.Modulus(Cardinal(5))
         let a = Cyclic.Group.Element(__unchecked: Ordinal(4))
         let b = Cyclic.Group.Element(__unchecked: Ordinal(3))
@@ -107,7 +107,7 @@ struct CyclicGroupDynamicTests {
     // MARK: - Subtract
 
     @Test
-    func `Subtract without wrap`() throws {
+    func `Subtract without wrap`() throws(Cyclic.Group.Modulus.Error) {
         let modulus = try Cyclic.Group.Modulus(Cardinal(10))
         let a = Cyclic.Group.Element(__unchecked: Ordinal(7))
         let b = Cyclic.Group.Element(__unchecked: Ordinal(3))
@@ -116,7 +116,7 @@ struct CyclicGroupDynamicTests {
     }
 
     @Test
-    func `Subtract with wrap`() throws {
+    func `Subtract with wrap`() throws(Cyclic.Group.Modulus.Error) {
         let modulus = try Cyclic.Group.Modulus(Cardinal(5))
         let a = Cyclic.Group.Element(__unchecked: Ordinal(1))
         let b = Cyclic.Group.Element(__unchecked: Ordinal(3))
@@ -127,7 +127,7 @@ struct CyclicGroupDynamicTests {
     // MARK: - Inverse
 
     @Test
-    func `Inverse property: element + inverse = zero`() throws {
+    func `Inverse property: element + inverse = zero`() throws(Cyclic.Group.Modulus.Error) {
         let modulus = try Cyclic.Group.Modulus(Cardinal(7))
         let element = Cyclic.Group.Element(__unchecked: Ordinal(4))
         let inv = Cyclic.Group.inverse(element, modulus: modulus)
@@ -136,7 +136,7 @@ struct CyclicGroupDynamicTests {
     }
 
     @Test
-    func `Inverse of zero is zero`() throws {
+    func `Inverse of zero is zero`() throws(Cyclic.Group.Modulus.Error) {
         let modulus = try Cyclic.Group.Modulus(Cardinal(5))
         let inv = Cyclic.Group.inverse(.zero, modulus: modulus)
         #expect(inv.residue == Ordinal(0))
@@ -145,7 +145,7 @@ struct CyclicGroupDynamicTests {
     // MARK: - Ring Buffer Simulation
 
     @Test
-    func `Ring buffer index advancement`() throws {
+    func `Ring buffer index advancement`() throws(Cyclic.Group.Modulus.Error) {
         let capacity = try Cyclic.Group.Modulus(Cardinal(4))
         var tail = Cyclic.Group.Element.zero
 

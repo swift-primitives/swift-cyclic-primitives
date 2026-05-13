@@ -20,7 +20,7 @@ struct CyclicGroupStaticElementTests {
     // MARK: - Construction
 
     @Test
-    func `Valid construction via throwing init`() throws {
+    func `Valid construction via throwing init`() throws(Cyclic.Group.Static<5>.Element.Error) {
         // Use throwing init explicitly with Ordinal
         let g0 = try Cyclic.Group.Static<5>.Element(Ordinal(0))
         #expect(g0.position == 0)
