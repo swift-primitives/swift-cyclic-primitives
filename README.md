@@ -146,6 +146,12 @@ Story 1 sibling primitives ([`cardinal`](https://github.com/swift-primitives/swi
 
 ---
 
+## Community
+
+<!-- BEGIN: discussion -->
+Discuss this package: [swift-institute/discussions/33](https://github.com/orgs/swift-institute/discussions/33)
+<!-- END: discussion -->
+
 ## License
 
 Apache 2.0. See [LICENSE.md](LICENSE.md).
