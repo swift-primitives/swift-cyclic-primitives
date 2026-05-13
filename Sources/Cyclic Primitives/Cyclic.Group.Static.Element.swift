@@ -84,6 +84,7 @@ extension Cyclic.Group.Static {
 
         // MARK: - Equatable
 
+        /// Returns whether two elements have the same position.
         @inlinable
         public static func == (lhs: Self, rhs: Self) -> Bool {
             lhs.position == rhs.position
@@ -91,21 +92,25 @@ extension Cyclic.Group.Static {
 
         // MARK: - Comparable
 
+        /// Compares elements by their position.
         @inlinable
         public static func < (lhs: Self, rhs: Self) -> Bool {
             lhs.position < rhs.position
         }
 
+        /// Compares elements by their position.
         @inlinable
         public static func <= (lhs: Self, rhs: Self) -> Bool {
             lhs.position <= rhs.position
         }
 
+        /// Compares elements by their position.
         @inlinable
         public static func > (lhs: Self, rhs: Self) -> Bool {
             lhs.position > rhs.position
         }
 
+        /// Compares elements by their position.
         @inlinable
         public static func >= (lhs: Self, rhs: Self) -> Bool {
             lhs.position >= rhs.position
@@ -113,6 +118,7 @@ extension Cyclic.Group.Static {
 
         // MARK: - Hashable
 
+        /// Hashes the element by combining its position.
         @inlinable
         public func hash(into hasher: inout Hasher) {
             hasher.combine(position)
@@ -123,6 +129,7 @@ extension Cyclic.Group.Static {
 // MARK: - CustomStringConvertible
 
 extension Cyclic.Group.Static.Element: CustomStringConvertible {
+    /// A textual representation of the element including its compile-time modulus.
     public var description: String {
         "Cyclic.Group.Static<\(modulus)>.Element(\(position))"
     }

@@ -84,6 +84,7 @@ extension Cyclic.Group {
 
         // MARK: - Equatable
 
+        /// Returns whether two elements have the same residue.
         @inlinable
         public static func == (lhs: Self, rhs: Self) -> Bool {
             lhs.residue == rhs.residue
@@ -91,6 +92,7 @@ extension Cyclic.Group {
 
         // MARK: - Comparable
 
+        /// Compares elements by their residue value.
         @inlinable
         public static func < (lhs: Self, rhs: Self) -> Bool {
             lhs.residue < rhs.residue
@@ -98,6 +100,7 @@ extension Cyclic.Group {
 
         // MARK: - Hashable
 
+        /// Hashes the element by combining its residue.
         @inlinable
         public func hash(into hasher: inout Hasher) {
             hasher.combine(residue)
@@ -108,6 +111,7 @@ extension Cyclic.Group {
 // MARK: - CustomStringConvertible
 
 extension Cyclic.Group.Element: CustomStringConvertible {
+    /// A textual representation of the element.
     public var description: String {
         "Cyclic.Group.Element(\(residue))"
     }

@@ -81,6 +81,7 @@ extension Cyclic.Group.Modulus {
 // MARK: - CustomStringConvertible
 
 extension Cyclic.Group.Modulus: CustomStringConvertible {
+    /// A textual representation of the modulus value.
     public var description: String {
         "Cyclic.Group.Modulus(\(value))"
     }

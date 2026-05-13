@@ -40,6 +40,9 @@ extension Cyclic.Group.Static {
             self._buffer = InlineArray(repeating: Element(__unchecked: .zero))
         }
 
+        /// Returns the next element in the group, or `nil` when iteration is exhausted.
+        ///
+        /// Elements are produced in order from `0` to `modulus - 1`.
         @inlinable
         public mutating func next() -> Element? {
             guard current < bound else { return nil }
@@ -48,6 +51,16 @@ extension Cyclic.Group.Static {
             return element
         }
 
+        /// Returns a borrowed span of up to `maximumCount` elements from the iterator.
+        ///
+        /// The returned span is borrowed from `self`'s internal storage; consume it
+        /// before calling `next()` or `nextSpan(maximumCount:)` again. The next
+        /// invocation invalidates the previously-returned span.
+        ///
+        /// The iterator advances by at most one element per call (the internal
+        /// `InlineArray<1, Element>` buffer holds a single element). When
+        /// iteration is exhausted or `maximumCount` is zero, an empty span is
+        /// returned.
         @_lifetime(&self)
         @inlinable
         public mutating func nextSpan(maximumCount: Cardinal) -> Swift.Span<Element> {
