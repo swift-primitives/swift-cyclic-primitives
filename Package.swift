@@ -22,13 +22,13 @@ let package = Package(
         )
     ],
     dependencies: [
-        .package(path: "../swift-comparison-primitives"),
-        .package(path: "../swift-hash-primitives"),
+        .package(url: "https://github.com/swift-primitives/swift-comparison-primitives.git", branch: "main"),
+        .package(url: "https://github.com/swift-primitives/swift-hash-primitives.git", branch: "main"),
         .package(url: "https://github.com/swift-primitives/swift-tagged-primitives.git", branch: "main"),
-        .package(path: "../swift-ordinal-primitives"),
-        .package(path: "../swift-cardinal-primitives"),
+        .package(url: "https://github.com/swift-primitives/swift-ordinal-primitives.git", branch: "main"),
+        .package(url: "https://github.com/swift-primitives/swift-cardinal-primitives.git", branch: "main"),
         .package(url: "https://github.com/swift-primitives/swift-index-primitives.git", branch: "main"),
-        .package(path: "../swift-sequence-primitives"),
+        .package(url: "https://github.com/swift-primitives/swift-sequence-primitives.git", branch: "main"),
     ],
     targets: [
         .target(
