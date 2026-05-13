@@ -24,8 +24,10 @@ let package = Package(
     dependencies: [
         .package(path: "../swift-comparison-primitives"),
         .package(path: "../swift-hash-primitives"),
+        .package(url: "https://github.com/swift-primitives/swift-tagged-primitives.git", branch: "main"),
         .package(path: "../swift-ordinal-primitives"),
         .package(path: "../swift-cardinal-primitives"),
+        .package(url: "https://github.com/swift-primitives/swift-index-primitives.git", branch: "main"),
         .package(path: "../swift-sequence-primitives"),
     ],
     targets: [
@@ -34,8 +36,10 @@ let package = Package(
             dependencies: [
                 .product(name: "Comparison Primitives", package: "swift-comparison-primitives"),
                 .product(name: "Hash Primitives", package: "swift-hash-primitives"),
+                .product(name: "Tagged Primitives", package: "swift-tagged-primitives"),
                 .product(name: "Ordinal Primitives", package: "swift-ordinal-primitives"),
                 .product(name: "Cardinal Primitives", package: "swift-cardinal-primitives"),
+                .product(name: "Index Primitives", package: "swift-index-primitives"),
                 .product(name: "Sequence Primitives", package: "swift-sequence-primitives"),
             ]
         ),
