@@ -18,6 +18,9 @@ public import Cyclic_Primitives
 ///
 /// - Warning: Traps on invalid values. Use only in tests.
 extension Cyclic.Group.Static.Element: ExpressibleByIntegerLiteral {
+    /// Constructs a cyclic group element from an integer literal.
+    ///
+    /// - Warning: Traps on invalid values. Tests-only helper.
     public init(integerLiteral value: Int) {
         do {
             self = try Self(Ordinal(UInt(value)))
