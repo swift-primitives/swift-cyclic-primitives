@@ -161,16 +161,16 @@ struct CyclicGroupStaticElementTests {
     func `Ring buffer index advancement`() {
         var tail = Cyclic.Group.Static<4>.Element.zero
 
-        tail = tail + .one  // 1
+        tail += .one  // 1
         #expect(tail.position == 1)
 
-        tail = tail + .one  // 2
+        tail += .one  // 2
         #expect(tail.position == 2)
 
-        tail = tail + .one  // 3
+        tail += .one  // 3
         #expect(tail.position == 3)
 
-        tail = tail + .one  // 0 (wraps)
+        tail += .one  // 0 (wraps)
         #expect(tail.position == 0)
     }
 

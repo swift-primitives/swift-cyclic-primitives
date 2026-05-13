@@ -43,5 +43,10 @@ extension Cyclic.Group.Static {
     ///
     /// This is a compile-time constant derived from the generic parameter.
     @inlinable
-    public static var count: Cardinal { try! Cardinal(modulus) }
+    public static var count: Cardinal {
+        // reason: modulus > 0 by Cyclic.Group.Static<modulus> documented contract; Cardinal(Int) only throws on negative input.
+        // swift-format-ignore: NeverUseForceTry
+        // swiftlint:disable:next force_try
+        try! Cardinal(modulus)
+    }
 }

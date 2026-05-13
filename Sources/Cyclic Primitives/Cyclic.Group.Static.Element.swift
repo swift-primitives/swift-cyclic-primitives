@@ -44,7 +44,12 @@ extension Cyclic.Group.Static {
 
         /// The group modulus as a Cardinal for arithmetic operations.
         @inlinable
-        public static var modulusCardinal: Cardinal { try! Cardinal(modulus) }
+        public static var modulusCardinal: Cardinal {
+            // reason: modulus > 0 by Cyclic.Group.Static<modulus> documented contract; Cardinal(Int) only throws on negative input.
+            // swift-format-ignore: NeverUseForceTry
+            // swiftlint:disable:next force_try
+            try! Cardinal(modulus)
+        }
 
         /// Creates a cyclic group element from an ordinal position.
         ///
@@ -52,7 +57,7 @@ extension Cyclic.Group.Static {
         /// - Throws: `Error.invalidModulus` if `modulus <= 0`.
         /// - Throws: `Error.outOfBounds` if `position >= modulus`.
         @inlinable
-        public init(_ position: Ordinal) throws(Element.Error) {
+        public init(_ position: Ordinal) throws(Self.Error) {
             guard modulus > 0 else { throw .invalidModulus }
             guard position < Self.modulusCardinal else {
                 throw .outOfBounds(Int(position.rawValue))

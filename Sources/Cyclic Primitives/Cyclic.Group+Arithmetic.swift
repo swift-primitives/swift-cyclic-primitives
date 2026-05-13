@@ -117,15 +117,17 @@ extension Cyclic.Group {
         by offset: Index<Tag>.Offset,
         modulus: Modulus
     ) -> Element {
-        if offset.vector >= .zero {
-            let forward = try! Ordinal(offset.vector) % modulus.value
-            let sum = element.residue + Cardinal(forward)
-            return Element(__unchecked: sum % modulus.value)
-        } else {
+        guard offset.vector >= .zero else {
             let backward = Ordinal(offset.magnitude.cardinal) % modulus.value
             let inverse = modulus.value.subtract.saturating(Cardinal(backward))
             let sum = element.residue + inverse
             return Element(__unchecked: sum % modulus.value)
         }
+        // reason: offset.vector >= .zero (just guarded), so Ordinal(vector) cannot throw.
+        // swift-format-ignore: NeverUseForceTry
+        // swiftlint:disable:next force_try
+        let forward = try! Ordinal(offset.vector) % modulus.value
+        let sum = element.residue + Cardinal(forward)
+        return Element(__unchecked: sum % modulus.value)
     }
 }

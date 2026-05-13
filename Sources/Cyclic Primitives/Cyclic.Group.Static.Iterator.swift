@@ -36,6 +36,9 @@ extension Cyclic.Group.Static {
         @inlinable
         init() {
             self.current = .zero
+            // reason: modulus > 0 by Cyclic.Group.Static<modulus> documented contract; Cardinal(Int) only throws on negative input.
+            // swift-format-ignore: NeverUseForceTry
+            // swiftlint:disable:next force_try
             self.bound = try! Cardinal(modulus)
             self._buffer = InlineArray(repeating: Element(__unchecked: .zero))
         }
@@ -47,7 +50,7 @@ extension Cyclic.Group.Static {
         public mutating func next() -> Element? {
             guard current < bound else { return nil }
             let element = Element(__unchecked: current)
-            current = current + Cardinal.one
+            current += Cardinal.one
             return element
         }
 
@@ -68,7 +71,7 @@ extension Cyclic.Group.Static {
                 return _buffer.span.extracting(first: 0)
             }
             _buffer[0] = Element(__unchecked: current)
-            current = current + Cardinal.one
+            current += Cardinal.one
             return _buffer.span
         }
     }

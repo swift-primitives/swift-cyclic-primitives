@@ -11,24 +11,6 @@
 
 public import Tagged_Primitives
 
-//// MARK: - Tagged<Tag, Cyclic.Group.Static<N>.Element> Properties and Constants
-//
-//extension Tagged where Tag: ~Copyable {
-//    /// The zero element (identity).
-//    @inlinable
-//    public static func zero<let N: Int>() -> Self
-//    where Underlying == Cyclic.Group.Static<N>.Element {
-//        Self(_unchecked: .zero)
-//    }
-//
-//    /// The generator element (1 mod N).
-//    @inlinable
-//    public static func one<let N: Int>() -> Self
-//    where Underlying == Cyclic.Group.Static<N>.Element {
-//        Self(_unchecked: .one)
-//    }
-//}
-
 // MARK: - Tagged<Tag, Cyclic.Group.Static<N>.Element> Construction
 
 extension Tagged where Tag: ~Copyable {
