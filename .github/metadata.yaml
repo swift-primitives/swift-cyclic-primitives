@@ -1,0 +1,11 @@
+# .github/metadata.yaml
+description: "Modular-arithmetic cyclic group types — dynamic (container-owned modulus) and compile-time-modulus surfaces."
+topics:
+  - primitives
+  - cyclic
+  - modular-arithmetic
+  - data-structures
+homepage: "https://swift-institute.org"
+readme:
+  family: E
+discussion: https://github.com/orgs/swift-institute/discussions/33

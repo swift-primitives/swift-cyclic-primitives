@@ -9,14 +9,17 @@
 //
 // ===----------------------------------------------------------------------===//
 
-import Sequence_Primitives
+public import Cardinal_Primitives
+public import Cyclic_Group_Static_Primitives
+public import Cyclic_Namespace_Primitives
+public import Sequence_Primitives
 
 // MARK: - Sequence.Protocol Conformance
 
-extension Cyclic.Group: Sequence.`Protocol` {
+extension Cyclic.Group.Static: Sequence.`Protocol` {
     /// Creates an iterator over all elements of this cyclic group.
     ///
-    /// Elements are produced in order from 0 to `order - 1`.
+    /// Elements are produced in order from 0 to `modulus - 1`.
     @inlinable
     public func makeIterator() -> Iterator {
         Iterator()
@@ -27,21 +30,26 @@ extension Cyclic.Group: Sequence.`Protocol` {
 
 /// Enables `for-in` loops and stdlib algorithm compatibility.
 ///
-/// Since `Cyclic.Group` and its `Element` are both `Copyable`, dual conformance
+/// Since `Cyclic.Group.Static` and its `Element` are both `Copyable`, dual conformance
 /// to both `Sequence.Protocol` and `Swift.Sequence` is supported with no
 /// additional implementation required.
-extension Cyclic.Group: Swift.Sequence {
+extension Cyclic.Group.Static: Swift.Sequence {
     /// The number of elements in this group (exact count known at compile time).
     @inlinable
-    public var underestimatedCount: Int { Self.order }
+    public var underestimatedCount: Int { Self.modulus }
 }
 
 // MARK: - Group Properties
 
-extension Cyclic.Group {
+extension Cyclic.Group.Static {
     /// The number of elements in this cyclic group.
     ///
     /// This is a compile-time constant derived from the generic parameter.
     @inlinable
-    public static var count: Int { order }
+    public static var count: Cardinal {
+        // reason: modulus > 0 by Cyclic.Group.Static<modulus> documented contract; Cardinal(Int) only throws on negative input.
+        // swift-format-ignore: NeverUseForceTry
+        // swiftlint:disable:next force_try
+        try! Cardinal(modulus)
+    }
 }
