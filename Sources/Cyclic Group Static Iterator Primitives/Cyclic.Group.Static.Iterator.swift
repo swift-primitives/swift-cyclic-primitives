@@ -13,8 +13,8 @@ public import Cardinal_Primitives
 public import Cyclic_Group_Static_Element_Primitives
 public import Cyclic_Group_Static_Primitives
 public import Cyclic_Namespace_Primitives
+public import Iterable
 internal import Ordinal_Primitives
-public import Sequence_Primitives
 
 extension Cyclic.Group.Static {
     /// An iterator over all elements of a cyclic group.
@@ -28,15 +28,12 @@ extension Cyclic.Group.Static {
     ///     print(element.position)  // 0, 1, 2, 3, 4
     /// }
     /// ```
-    public struct Iterator: Sendable {
+    public struct Iterator: Iterator_Primitive.Iterator.`Protocol`, IteratorProtocol, Sendable {
         @usableFromInline
         var current: Ordinal
 
         @usableFromInline
         let bound: Cardinal
-
-        @usableFromInline
-        var _buffer: InlineArray<1, Cyclic.Group.Static<modulus>.Element>
 
         @inlinable
         package init() {
@@ -45,14 +42,13 @@ extension Cyclic.Group.Static {
             // swift-format-ignore: NeverUseForceTry
             // swiftlint:disable:next force_try
             self.bound = try! Cardinal(modulus)
-            self._buffer = InlineArray(repeating: Cyclic.Group.Static<modulus>.Element(__unchecked: .zero))
         }
     }
 }
 
-// MARK: - IteratorProtocol
+// MARK: - next() — satisfies Iterator.`Protocol` + Swift.IteratorProtocol
 
-extension Cyclic.Group.Static.Iterator: IteratorProtocol {
+extension Cyclic.Group.Static.Iterator {
     /// Returns the next element in the group, or `nil` when iteration is exhausted.
     ///
     /// Elements are produced in order from `0` to `modulus - 1`.
@@ -62,30 +58,5 @@ extension Cyclic.Group.Static.Iterator: IteratorProtocol {
         let element = Cyclic.Group.Static<modulus>.Element(__unchecked: current)
         current += Cardinal.one
         return element
-    }
-}
-
-// MARK: - Sequence.Iterator.`Protocol`
-
-extension Cyclic.Group.Static.Iterator: Sequence.Iterator.`Protocol` {
-    /// Returns a borrowed span of up to `maximumCount` elements from the iterator.
-    ///
-    /// The returned span is borrowed from `self`'s internal storage; consume it
-    /// before calling `next()` or `nextSpan(maximumCount:)` again. The next
-    /// invocation invalidates the previously-returned span.
-    ///
-    /// The iterator advances by at most one element per call (the internal
-    /// `InlineArray<1, Element>` buffer holds a single element). When
-    /// iteration is exhausted or `maximumCount` is zero, an empty span is
-    /// returned.
-    @_lifetime(&self)
-    @inlinable
-    public mutating func nextSpan(maximumCount: Cardinal) -> Swift.Span<Cyclic.Group.Static<modulus>.Element> {
-        guard maximumCount > .zero, current < bound else {
-            return _buffer.span.extracting(first: 0)
-        }
-        _buffer[0] = Cyclic.Group.Static<modulus>.Element(__unchecked: current)
-        current += Cardinal.one
-        return _buffer.span
     }
 }

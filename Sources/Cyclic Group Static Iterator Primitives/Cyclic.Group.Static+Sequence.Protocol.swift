@@ -12,11 +12,11 @@
 public import Cardinal_Primitives
 public import Cyclic_Group_Static_Primitives
 public import Cyclic_Namespace_Primitives
-public import Sequence_Primitives
+public import Iterable
 
-// MARK: - Sequence.Protocol Conformance
+// MARK: - Iterable Conformance
 
-extension Cyclic.Group.Static: Sequence.`Protocol` {
+extension Cyclic.Group.Static: Iterable {
     /// Creates an iterator over all elements of this cyclic group.
     ///
     /// Elements are produced in order from 0 to `modulus - 1`.

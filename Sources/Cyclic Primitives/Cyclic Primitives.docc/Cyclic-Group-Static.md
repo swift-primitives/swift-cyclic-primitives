@@ -8,7 +8,7 @@ The value-generic-modulus surface for cyclic-group arithmetic — `Cyclic.Group.
 
 - **Zero-sized.** `Cyclic.Group.Static<4>` carries no runtime storage; it exists only to anchor the namespace and the modulus value-generic parameter.
 - **Type-distinct per modulus.** `Cyclic.Group.Static<4>.Element` is a different type from `Cyclic.Group.Static<8>.Element`; the compiler enforces that elements from different cyclic groups cannot be mixed in arithmetic.
-- **Iterable as a `Sequence`.** The group itself conforms to both `Sequence.Protocol` and `Swift.Sequence`; iterating produces every element of `[0, modulus)` exactly once.
+- **Iterable as a `Sequence`.** The group itself conforms to both `Iterable` and `Swift.Sequence`; iterating produces every element of `[0, modulus)` exactly once.
 
 This is the right shape when the modulus is **fixed at compile time** — a hash-table-bucket index, a small modular ring known at type-check time, a fixed wheel of states.
 
@@ -34,7 +34,7 @@ for element in Cyclic.Group.Static<5>() {
 }
 ```
 
-The iterator implements `nextSpan(maximumCount:) -> Span<Element>` as its primitive method per the `Sequence.Protocol` family contract. The Span is borrowed from the iterator's internal `InlineArray<1, Element>` storage; consume it before the next call invalidates the previous return value. The `Iterator.next() -> Element?` shape is the convenience built on top.
+The iterator implements `next() -> Element?` as its primitive method, satisfying both `Iterator.\`Protocol\`` (from `swift-iterator-primitives`, scalar `next()` with `Failure == Never`) and `Swift.IteratorProtocol`. Elements are computed on demand from `0` to `modulus - 1`.
 
 ## Construction
 
