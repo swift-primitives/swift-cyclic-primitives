@@ -8,7 +8,7 @@ The value-generic-modulus surface for cyclic-group arithmetic — `Cyclic.Group.
 
 - **Zero-sized.** `Cyclic.Group.Static<4>` carries no runtime storage; it exists only to anchor the namespace and the modulus value-generic parameter.
 - **Type-distinct per modulus.** `Cyclic.Group.Static<4>.Element` is a different type from `Cyclic.Group.Static<8>.Element`; the compiler enforces that elements from different cyclic groups cannot be mixed in arithmetic.
-- **Iterable as a `Sequence`.** The group itself conforms to both `Iterable` and `Swift.Sequence`; iterating produces every element of `[0, modulus)` exactly once.
+- **Iterable as a `Sequence`.** Via `swift-cyclic-iterator-primitives`, the group conforms to both `Iterable` and `Swift.Sequence`; iterating produces every element of `[0, modulus)` exactly once. (Import `Cyclic_Iterator_Primitives` to opt in.)
 
 This is the right shape when the modulus is **fixed at compile time** — a hash-table-bucket index, a small modular ring known at type-check time, a fixed wheel of states.
 
