@@ -73,7 +73,7 @@ extension Cyclic.Group {
         ///   that will be used in operations.
         /// - Warning: No validation is performed.
         @inlinable
-        public init<Tag: ~Copyable>(__unchecked index: Index<Tag>) {
+        public init<Tag: ~Copyable & ~Escapable>(__unchecked index: Index<Tag>) {
             self.residue = index.ordinal
         }
 

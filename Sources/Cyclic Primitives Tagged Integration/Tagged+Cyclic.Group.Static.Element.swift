@@ -15,7 +15,7 @@ public import Tagged_Primitives
 
 // MARK: - Tagged<Tag, Cyclic.Group.Static<N>.Element> Construction
 
-extension Tagged where Tag: ~Copyable {
+extension Tagged where Tag: ~Copyable & ~Escapable {
     /// Creates a tagged cyclic group element from an element.
     @inlinable
     public init<let N: Int>(_ element: Cyclic.Group.Static<N>.Element)
@@ -40,7 +40,7 @@ extension Tagged where Tag: ~Copyable {
 
 // MARK: - Tagged<Tag, Cyclic.Group.Static<N>.Element> Arithmetic
 
-extension Tagged where Tag: ~Copyable {
+extension Tagged where Tag: ~Copyable & ~Escapable {
     /// Group addition (modular).
     @inlinable
     public static func + <let N: Int>(lhs: Self, rhs: Self) -> Self
@@ -72,7 +72,7 @@ extension Tagged where Tag: ~Copyable {
 
 // MARK: - Tagged<Tag, Cyclic.Group.Static<N>.Element> Inverse
 
-extension Tagged where Tag: ~Copyable {
+extension Tagged where Tag: ~Copyable & ~Escapable {
     /// The additive inverse of this element.
     @inlinable
     public func inverse<let N: Int>() -> Self where Underlying == Cyclic.Group.Static<N>.Element {

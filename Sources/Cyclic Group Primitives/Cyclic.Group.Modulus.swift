@@ -56,7 +56,7 @@ extension Cyclic.Group {
         /// - Parameter count: The count value (must be > 0).
         /// - Throws: `Error.zeroModulus` if count is zero.
         @inlinable
-        public init<Tag: ~Copyable>(_ count: Index<Tag>.Count) throws(Self.Error) {
+        public init<Tag: ~Copyable & ~Escapable>(_ count: Index<Tag>.Count) throws(Self.Error) {
             guard count > .zero else { throw .zeroModulus }
             self.value = count.underlying
         }
@@ -66,7 +66,7 @@ extension Cyclic.Group {
         /// - Parameter count: Must be > 0.
         /// - Warning: No validation is performed.
         @inlinable
-        public init<Tag: ~Copyable>(__unchecked count: Index<Tag>.Count) {
+        public init<Tag: ~Copyable & ~Escapable>(__unchecked count: Index<Tag>.Count) {
             self.value = count.underlying
         }
     }

@@ -117,7 +117,7 @@ extension Cyclic.Group {
     /// - Returns: The resulting element.
     /// - Complexity: O(1)
     @inlinable
-    public static func advanced<Tag: ~Copyable>(
+    public static func advanced<Tag: ~Copyable & ~Escapable>(
         _ element: Element,
         by offset: Index<Tag>.Offset,
         modulus: Modulus
