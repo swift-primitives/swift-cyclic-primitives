@@ -46,11 +46,13 @@ import Institute_Linter_Rule_Unchecked
 
 Lint.run(dependencies: [
     .package(
-        path: "../swift-primitives-linter-rules",
+        url: "https://github.com/swift-primitives/swift-primitives-linter-rules.git",
+        branch: "main",
         products: ["Linter Primitives Rules", "Primitives Linter Rule RawValue"]
     ),
     .package(
-        path: "../../swift-foundations/swift-institute-linter-rules",
+        url: "https://github.com/swift-foundations/swift-institute-linter-rules.git",
+        branch: "main",
         products: ["Institute Linter Rule Structure", "Institute Linter Rule Unchecked"]
     ),
 ]) {
